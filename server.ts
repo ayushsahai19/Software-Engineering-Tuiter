@@ -29,17 +29,17 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 const HOST = "cluster0.m8jeh.mongodb.net";
 const DB_NAME = "myFirstDatabase";
 const DB_QUERY = "retryWrites=true&w=majority";
-const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${DB_NAME}?${DB_QUERY}`;// connect to the database
+const connectionString = `mongodb+srv://ayushsahai96:Toppergrm1.@softwareengg.bmje5.mongodb.net/tuiter?retryWrites=true&w=majority`;
 mongoose.connect(connectionString);
 
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: process.env.CORS_ORIGIN
+    origin: "http://localhost:3000" || process.env.CORS_ORIGIN
 }));
 
 let sess = {
-    secret: process.env.EXPRESS_SESSION_SECRET,
+    secret: 'DNGikr8CmM',
     saveUninitialized: true,
     resave: true,
     cookie: {
@@ -51,6 +51,7 @@ let sess = {
 if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1) // trust first proxy
 }
+
 
 app.use(session(sess))
 app.use(express.json());
