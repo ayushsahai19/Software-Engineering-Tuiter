@@ -19,7 +19,9 @@ import SessionController from "./controllers/SessionController";
 import AuthenticationController from "./controllers/AuthenticationController";
 import mongoose from "mongoose";
 import GroupController from "./controllers/GroupController";
+
 const cors = require("cors");
+
 const session = require("express-session");
 
 // build the connection string
@@ -35,7 +37,7 @@ mongoose.connect(connectionString);
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:3000" || process.env.CORS_ORIGIN
+    origin: "https://boisterous-gnome-bfa8b1.netlify.app"
 }));
 
 let sess = {
