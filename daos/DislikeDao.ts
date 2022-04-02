@@ -1,8 +1,14 @@
+/**
+ * @file Implements DAO managing data storage of dislikes. Uses mongoose DislikeModel.
+ */
 import DislikeDaoI from "../interfaces/DislikeDaoI";
 import DislikeModel from "../mongoose/dislikes/DislikeModel";
 import Dislike from "../models/dislikes/Dislike";
 
-
+/**
+ * @class DislikeDao Implements DAO managing data storage of Dislikes
+ * @property {DislikeDao} dislikeDao Private single instance of DislikeDao
+ */
 export default class DislikeDao implements DislikeDaoI {
     private static dislikeDao: DislikeDao | null = null;
     
