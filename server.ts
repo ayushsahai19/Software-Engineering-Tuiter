@@ -20,6 +20,7 @@ import SessionController from "./controllers/SessionController";
 import AuthenticationController from "./controllers/AuthenticationController";
 import mongoose from "mongoose";
 import GroupController from "./controllers/GroupController";
+import BookmarkController from './controllers/BookmarkController';
 
 const cors = require("cors");
 
@@ -71,7 +72,7 @@ const courseController = new CourseController(app);
 const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
 const likesController = LikeController.getInstance(app);
-
+const bookmarkController = BookmarkController.getInstance(app);
 
 SessionController(app);
 AuthenticationController(app);
