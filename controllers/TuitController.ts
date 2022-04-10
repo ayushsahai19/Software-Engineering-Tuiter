@@ -128,7 +128,6 @@ export default class TuitController implements TuitControllerI {
      * database
      */
     createTuitByUser = (req: Request, res: Response) => {
-        // console.log((req as MulterRequest).file);
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ?
             // @ts-ignore
@@ -137,7 +136,8 @@ export default class TuitController implements TuitControllerI {
             res.sendStatus(503);
             return;
         }
-        TuitController.tuitDao.createTuitByUser(userId, (req as MulterRequest).file.path ,req.body)
+        var imagepath = process.env.IMAGE_URL + (req as MulterRequest).file.path;
+        TuitController.tuitDao.createTuitByUser(userId, imagepath ,req.body)
             .then((tuit: Tuit) => res.json(tuit));
     }
 
