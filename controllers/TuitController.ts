@@ -136,7 +136,10 @@ export default class TuitController implements TuitControllerI {
             res.sendStatus(503);
             return;
         }
-        var imagepath = process.env.IMAGE_URL + (req as MulterRequest).file.path;
+        var imagepath;
+        if((req as MulterRequest).file !== undefined) {
+            imagepath = process.env.IMAGE_URL + (req as MulterRequest).file.path;
+        }
         TuitController.tuitDao.createTuitByUser(userId, imagepath ,req.body)
             .then((tuit: Tuit) => res.json(tuit));
     }
