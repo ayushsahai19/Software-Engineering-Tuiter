@@ -21,6 +21,7 @@ import AuthenticationController from "./controllers/AuthenticationController";
 import mongoose from "mongoose";
 import GroupController from "./controllers/GroupController";
 import BookmarkController from './controllers/BookmarkController';
+import MediaController from "./controllers/MediaController";
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -79,6 +80,7 @@ const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
 const likesController = LikeController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
+const mediaController = MediaController.getInstance(app);
 
 SessionController(app);
 AuthenticationController(app);
