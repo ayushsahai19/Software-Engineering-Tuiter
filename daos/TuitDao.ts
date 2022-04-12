@@ -5,6 +5,9 @@
 import TuitModel from "../mongoose/tuits/TuitModel";
 import Tuit from "../models/tuits/Tuit";
 import TuitDaoI from "../interfaces/TuitDaoI";
+import 'multer';
+
+const multer = require("multer");
 
 /**
  * @class UserDao Implements Data Access Object managing data storage
@@ -33,8 +36,8 @@ export default class TuitDao implements TuitDaoI{
         TuitModel.findById(uid)
             .populate("postedBy")
             .exec();
-    createTuitByUser = async (uid: string, tuit: Tuit): Promise<Tuit> =>
-        TuitModel.create({...tuit, postedBy: uid});
+    createTuitByUser = async (uid: string, media: string ,tuit: Tuit): Promise<Tuit> =>
+        TuitModel.create({...tuit, image: media, postedBy: uid});
     updateTuit = async (tid: string, tuit: Tuit): Promise<any> =>
         TuitModel.updateOne(
             {_id: tid},

@@ -5,6 +5,32 @@ import TuitDao from "../daos/TuitDao";
 import Tuit from "../models/tuits/Tuit";
 import {Express, Request, Response} from "express";
 import TuitControllerI from "../interfaces/TuitControllerI";
+import 'multer';
+
+const multer = require("multer");
+const storage = multer.diskStorage({
+    destination: function (req: any, file: any, cb: (arg0: null, arg1: string) => void) {
+        cb(null, './uploads/');
+    },
+    filename: function (req: any, file: any, cb: (arg0: null, arg1: string) => void) {
+        cb(null, Date.now() + file.originalname);
+    }
+})
+
+const fileFilter = (req: any, file: any, cb: (arg0: null, arg1: boolean) => void) => {
+    if(file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5 //5MB max size
+    },
+    fileFilter: fileFilter
+});
 
 /**
  * @class TuitController Implements RESTful Web service API for tuits resource.
@@ -22,6 +48,11 @@ import TuitControllerI from "../interfaces/TuitControllerI";
  * @property {TuitController} tuitController Singleton controller implementing
  * RESTful Web service API
  */
+
+interface MulterRequest extends Request {
+    file: any;
+}
+
 export default class TuitController implements TuitControllerI {
     private static tuitDao: TuitDao = TuitDao.getInstance();
     private static tuitController: TuitController | null = null;
@@ -33,19 +64,20 @@ export default class TuitController implements TuitControllerI {
      * @return TuitController
      */
     public static getInstance = (app: Express): TuitController => {
-        if(TuitController.tuitController === null) {
+        if (TuitController.tuitController === null) {
             TuitController.tuitController = new TuitController();
             app.get("/api/tuits", TuitController.tuitController.findAllTuits);
             app.get("/api/users/:uid/tuits", TuitController.tuitController.findAllTuitsByUser);
             app.get("/api/tuits/:uid", TuitController.tuitController.findTuitById);
-            app.post("/api/users/:uid/tuits", TuitController.tuitController.createTuitByUser);
+            app.post("/api/users/:uid/tuits", upload.single('image'), TuitController.tuitController.createTuitByUser);
             app.put("/api/tuits/:uid", TuitController.tuitController.updateTuit);
             app.delete("/api/tuits/:uid", TuitController.tuitController.deleteTuit);
         }
         return TuitController.tuitController;
     }
 
-    private constructor() {}
+    private constructor() {
+    }
 
     /**
      * Retrieves all tuits from the database and returns an array of tuits.
@@ -56,7 +88,7 @@ export default class TuitController implements TuitControllerI {
     findAllTuits = (req: Request, res: Response) =>
         TuitController.tuitDao.findAllTuits()
             .then((tuits: Tuit[]) => res.json(tuits));
-    
+
     /**
      * @param {Request} req Represents request from client, including path
      * parameter tid identifying the primary key of the tuit to be retrieved
@@ -104,8 +136,11 @@ export default class TuitController implements TuitControllerI {
             res.sendStatus(503);
             return;
         }
-
-        TuitController.tuitDao.createTuitByUser(userId, req.body)
+        var imagepath;
+        if((req as MulterRequest).file !== undefined) {
+            imagepath = process.env.IMAGE_URL + (req as MulterRequest).file.path;
+        }
+        TuitController.tuitDao.createTuitByUser(userId, imagepath ,req.body)
             .then((tuit: Tuit) => res.json(tuit));
     }
 

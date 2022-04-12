@@ -21,7 +21,10 @@ import AuthenticationController from "./controllers/AuthenticationController";
 import mongoose from "mongoose";
 import GroupController from "./controllers/GroupController";
 import BookmarkController from './controllers/BookmarkController';
+import MediaController from "./controllers/MediaController";
 
+const dotenv = require('dotenv');
+dotenv.config();
 const cors = require("cors");
 
 const session = require("express-session");
@@ -30,20 +33,25 @@ const session = require("express-session");
 const PROTOCOL = "mongodb+srv";
 const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
-const HOST = "cluster0.m8jeh.mongodb.net";
-const DB_NAME = "myFirstDatabase";
+const HOST = "softwareengg.bmje5.mongodb.net";
+const DB_NAME = "tuiter";
 const DB_QUERY = "retryWrites=true&w=majority";
-const connectionString = `mongodb+srv://ayushsahai96:Toppergrm1.@softwareengg.bmje5.mongodb.net/tuiter?retryWrites=true&w=majority`;
+// const connectionString = `mongodb+srv://ayushsahai96:Toppergrm1.@softwareengg.bmje5.mongodb.net/tuiter?retryWrites=true&w=majority`;
+
+const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${DB_NAME}?${DB_QUERY}`;// connect to the database
 mongoose.connect(connectionString);
 
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:3000"
+
+    origin: process.env.CORS_ORIGIN
 }));
 
+app.use('/uploads', express.static('uploads'));
+
 let sess = {
-    secret: 'DNGikr8CmM',
+    secret: process.env.EXPRESS_SESSION_SECRET,
     saveUninitialized: true,
     resave: true,
     cookie: {
@@ -73,6 +81,7 @@ const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
 const likesController = LikeController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
+const mediaController = MediaController.getInstance(app);
 
 SessionController(app);
 AuthenticationController(app);
