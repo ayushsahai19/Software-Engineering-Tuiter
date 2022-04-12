@@ -12,6 +12,6 @@
   * @property {User} bookmarkedBy user bookmarking tuit
   */
  export default interface Bookmark {
-     bookmarkedTuit: Tuit,
+     tuit: Tuit,
      bookmarkedBy: User
  }

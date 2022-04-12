@@ -32,8 +32,9 @@
       * @returns Promise to be notified when the tuit is bookmarked in
       * database
       */
-     bookmarkTuit = async (tid: string, uid: string): Promise<Bookmark> =>
-         BookmarkModel.create({bookmarkedTuit: tid, bookmarkedBy: uid});
+      
+     bookmarkTuit = async (tid: string, uid: string): Promise<any> =>
+         BookmarkModel.create({tuit: tid, bookmarkedBy: uid});
  
      /**
       * Creates an un-bookmark instance in the database
@@ -43,7 +44,7 @@
       * database
       */
      unBookmarkTuit = async (tid: string, uid: string): Promise<any> =>
-         BookmarkModel.deleteOne({bookmarkedTuit: tid, bookmarkedBy: uid});
+         BookmarkModel.deleteOne({tuit: tid, bookmarkedBy: uid});
  
  
      /**
@@ -53,6 +54,20 @@
       * @returns Promise to be notified when tuits are retrieved from the database
       */
      viewAllTuitsBookmarkedByUser = async (uid: string): Promise<Bookmark[]> =>
-         BookmarkModel.find({bookmarkedBy: uid});
+     BookmarkModel
+            .find({bookmarkedBy: uid})
+            .populate({
+                path: "tuit",
+                populate: {
+                    path: "postedBy"
+                }
+            })
+            .exec();
+
+    findUserBookmarksTuit = async (uid: string, tid: string): Promise<any> =>
+         BookmarkModel.findOne({tuit: tid, bookmarkedBy: uid});
+
+    userBookmarkesTuit = async (uid: string, tid: string): Promise<any> =>
+        BookmarkModel.deleteOne({tuit: tid, bookmarkedBy: uid});
  
 }
