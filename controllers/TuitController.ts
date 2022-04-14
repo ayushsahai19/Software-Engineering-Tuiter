@@ -111,10 +111,10 @@ export default class TuitController implements TuitControllerI {
         let userId = req.params.uid === "my" && req.session['profile'] ?
             // @ts-ignore
             req.session['profile']._id : req.params.uid;
-        if (userId === "my") {
-            res.sendStatus(503);
-            return;
-        }
+        // if (userId === "my") {
+        //     res.sendStatus(503);
+        //     return;
+        // }
         TuitController.tuitDao.findAllTuitsByUser(userId)
             .then((tuits: Tuit[]) => res.json(tuits));
     }
@@ -132,10 +132,10 @@ export default class TuitController implements TuitControllerI {
         let userId = req.params.uid === "my" && req.session['profile'] ?
             // @ts-ignore
             req.session['profile']._id : req.params.uid;
-        if (userId === "my") {
-            res.sendStatus(503);
-            return;
-        }
+        // if (userId === "my") {
+        //     res.sendStatus(503);
+        //     return;
+        // }
         var imagepath;
         if((req as MulterRequest).file !== undefined) {
             imagepath = process.env.IMAGE_URL + (req as MulterRequest).file.path;
