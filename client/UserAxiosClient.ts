@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import User from "../models/users/User";
 // axios.defaults.baseURL = 'http://localhost:4000/api';
 //axios.defaults.baseURL = 'https://a4-ayush-node.herokuapp.com/api';
-axios.defaults.baseURL = ('${process.env.IMAGE_URL}api')
+axios.defaults.baseURL = 'https://tuiter-softwareproj.herokuapp.com/api'
 
 const findAllUsers = async () =>
     await axios.get('/users');
