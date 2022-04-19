@@ -71,10 +71,13 @@
              try {
                  if(userAlreadyBookmarkedTuit) {
                      await bookmarkDao.userBookmarkesTuit(userId,tid);
+                     tuit.stats.bookmarks = false;
                  }
                  else {
                 await bookmarkDao.bookmarkTuit(tid, userId);
+                     tuit.stats.bookmarks = true;
                  }
+                 await tuitDao.updateLikes(tid, tuit.stats);
                 res.sendStatus(200);
              } catch (e) {
                  res.sendStatus(404);
@@ -91,12 +94,16 @@
       */
      unBookmarkTuit = async (req: Request, res: Response) => {
         const uid = req.params.uid;
+         const tid = req.params.tid;
+         const tuitDao = BookmarkController.tuitDao;
         // @ts-ignore
         const profile = req.session['profile'];
         const userId = uid === "me" && profile ?
             profile._id : uid;
+        let tuit = await tuitDao.findTuitById(tid);
             try {
          BookmarkController.bookmarkDao.unBookmarkTuit(req.params.tid, userId)
+                tuit.stats.bookmarks = false;
              res.sendStatus(200)
             }
             catch (e) {
